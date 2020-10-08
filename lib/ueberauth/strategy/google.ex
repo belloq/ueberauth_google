@@ -50,6 +50,12 @@ defmodule Ueberauth.Strategy.Google do
     end
   end
 
+  def handle_callback!(%Plug.Conn{params: %{"access_token" => access_token}} = conn) do
+    token = OAuth2.AccessToken.new(access_token)
+
+    fetch_user(conn, token)
+  end
+
   @doc false
   def handle_callback!(conn) do
     set_errors!(conn, [error("missing_code", "No code received")])
